@@ -4,26 +4,36 @@ body {
   line-height: 1;
 }
 
+.jumbotron {
+  text-align: center;
+  background-color: transparent;
+  color: black;
+  border-radius: 0;
+  padding-bottom: 2rem;
+  border-bottom: 10px solid black;
+}
 textarea {
   background: transparent;
   border: none;
   resize: none;
   color: #000000;
   border-left: 1px solid black;
-  padding: 0;
-  margin: 5px;
+  padding: 5px;
+  margin: 0px;
+}
+.form-control {
+  background-color: rgba(255, 255, 255, .2);
 }
 
-.jumbotron {
-  text-align: center;
-  background-color: transparent;
-  color: black;
-  border-radius: 0;
-  border-bottom: 10px solid black;
+.form-control:focus {
+  background-color: rgba(255, 255, 255, .2);
 }
 
 .description{
   white-space: normal;
+}
+.description p {
+  padding: 10px;
 }
 
 .time-block{
