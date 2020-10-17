@@ -1,4 +1,6 @@
 
+var toDos = {};
+
 // Write current day to header
 $("#currentDay").text(moment().format('dddd, MMMM Do'));
 
@@ -19,32 +21,30 @@ $(".description").on("click", function() {
     textInput.trigger("focus");
   });
 
-// when save button is clicked
-/*
+
 $(".saveBtn").on("click", "p", function() {
-    var textInput = $(".description textarea");
-    var text = textInput.val().trim();
-    var textP = $("<p>")
-        .text(text);
-
-    textInput.replaceWith(textP);
-    console.log(text);
-
-  })
-*/
-
-$(".saveBtn").on("click", "p", function(event) {
-    console.log("Target:" +event.target);
-    var target = $(event.target).closest("div").closest("div");
-    console.log(target);
     
-    //var textInput = $(".description textarea");
-    //var text = textInput.val().trim();
-    //var textP = $("<p>")
-        //.text(text);
+    var myTarget = $(this)
+        .closest(".row");
+    
+    if (myTarget.has("textarea").length > 0 ) {
+        console.log("Has Textarea");
+        textInput = myTarget.find(".description textarea").first();
+        
+        var text = textInput.val().trim();
+        var textP = $("<p>").text(text);
 
-    //textInput.replaceWith(textP);
-    //console.log(text);
+        textInput.replaceWith(textP);
+
+        var timeBlock = "time-Block-" + myTarget.find(".description").first().attr("time-block");
+        console.log(timeBlock);
+
+        toDos[timeBlock] = text;
+        console.log(toDos);
+    }
+    else {
+        console.log("Has NO textArea");
+    }
 
   })
 
