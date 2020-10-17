@@ -1,5 +1,6 @@
 
 var toDos = {};
+var currentDate = moment().format("MMDDYY");
 
 // Write current day to header
 $("#currentDay").text(moment().format('dddd, MMMM Do'));
@@ -9,8 +10,6 @@ $(".description").on("click", function() {
     var text = $(this).find("p")
       .text()
       .trim();
-    console.log(this);
-    console.log(text);
   
     // create a new textarea element
     var textInput = $("<textarea>")
@@ -21,7 +20,7 @@ $(".description").on("click", function() {
     textInput.trigger("focus");
   });
 
-// When save button is clicked
+// When save button is clicked convert textarea to p and set LS
 $(".saveBtn").on("click", "p", function() {
     
     // Get closest parent up from saveBtn
@@ -29,18 +28,21 @@ $(".saveBtn").on("click", "p", function() {
     
     // If there is a textarea
     if (myTarget.has("textarea").length > 0 ) {
-        console.log("Has Textarea");
-        textInput = myTarget.find(".description textarea").first();
         
+        // target textarea and get value
+        textInput = myTarget.find(".description textarea");
         var text = textInput.val().trim();
+        
+        // create <p> element and assign edited text
         var textP = $("<p>").text(text);
-
         textInput.replaceWith(textP);
 
-        var timeBlock = "time-Block-" + myTarget.find(".description").first().attr("time-block");
+        // get the custom time-block attribute value
+        var timeBlock = "time-Block-" + myTarget.find(".description").first().attr("time-block"); // '09'
 
+        // add key: value to toDos object and update localStorage
         toDos[timeBlock] = text;
-        localStorage.setItem('toDos', JSON.stringify(toDos));
+        localStorage.setItem('toDos-'+currentDate, JSON.stringify(toDos));
     }
     else {
         console.log("Has NO textArea");
@@ -75,21 +77,20 @@ var timeBlocks = function() {
     }
 };
 
+// load todos from localStorage
 var loadToDos = function() {
     
-    // if nothing in localStorage create empty object
-    toDos = JSON.parse(localStorage.getItem('toDos')) || {};
-    console.log(toDos);
+    // get todos from LS if nothing in LS create empty object
+    toDos = JSON.parse(localStorage.getItem('toDos-'+ currentDate)) || {};
 
+    // loop over each todo and write to page
     $.each(toDos, function(key,val){
-        console.log(key,val); //time-block-09 Drink Coffee
+        
         var blockNum = key.slice(-2); // 09
-        var descCol = "[time-block='" + blockNum + "'] p";
-        console.log(descCol);
+        var descCol = "[time-block='" + blockNum + "'] p"; // [time-block='09' p]
+        // find column with corresponding timeblock and write todo
         $(descCol).text(val);
     });
-    
-
 };
 
 // Run timeBlocks every 30 minutes to set time block color
