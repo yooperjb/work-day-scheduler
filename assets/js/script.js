@@ -21,12 +21,13 @@ $(".description").on("click", function() {
     textInput.trigger("focus");
   });
 
-
+// When save button is clicked
 $(".saveBtn").on("click", "p", function() {
     
-    var myTarget = $(this)
-        .closest(".row");
+    // Get closest parent up from saveBtn
+    var myTarget = $(this).closest(".row");
     
+    // If there is a textarea
     if (myTarget.has("textarea").length > 0 ) {
         console.log("Has Textarea");
         textInput = myTarget.find(".description textarea").first();
@@ -37,10 +38,9 @@ $(".saveBtn").on("click", "p", function() {
         textInput.replaceWith(textP);
 
         var timeBlock = "time-Block-" + myTarget.find(".description").first().attr("time-block");
-        console.log(timeBlock);
 
         toDos[timeBlock] = text;
-        console.log(toDos);
+        localStorage.setItem('toDos', JSON.stringify(toDos));
     }
     else {
         console.log("Has NO textArea");
@@ -50,11 +50,12 @@ $(".saveBtn").on("click", "p", function() {
 
 // Change time block bg color based on time status (past, present, future)
 var timeBlocks = function() {
+    // get all .desription columns
     descCol = $(".description");
-    //console.log(descCol);
+    // grab the current time
     currentTime = moment().format('HH');
 
-    // iterate through each time block column
+    // iterate through each time block column - compare timeblock with current time
     for (let i=0; i < descCol.length; i++){
         var timeBlockHour = descCol[i].getAttribute("time-block");
         var classAttr = descCol[i].getAttribute("class");
@@ -74,9 +75,27 @@ var timeBlocks = function() {
     }
 };
 
+var loadToDos = function() {
+    
+    // if nothing in localStorage create empty object
+    toDos = JSON.parse(localStorage.getItem('toDos')) || {};
+    console.log(toDos);
+
+    $.each(toDos, function(key,val){
+        console.log(key,val); //time-block-09 Drink Coffee
+        var blockNum = key.slice(-2); // 09
+        var descCol = "[time-block='" + blockNum + "'] p";
+        console.log(descCol);
+        $(descCol).text(val);
+    });
+    
+
+};
+
 // Run timeBlocks every 30 minutes to set time block color
 setInterval(function () {
     timeBlocks();
   }, 1800000);
 
 timeBlocks();
+loadToDos();
